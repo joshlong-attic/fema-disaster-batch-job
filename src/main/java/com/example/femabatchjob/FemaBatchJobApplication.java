@@ -38,8 +38,6 @@ public class FemaBatchJobApplication {
 
 @Configuration
 class FemaBatchJobConfiguration {
-
-
     @Bean
     Job job(JobBuilderFactory jobFactory, StepOneConfiguration s1) {
         return jobFactory
@@ -55,14 +53,15 @@ class FemaBatchJobConfiguration {
 class StepOneConfiguration {
 
     private final StepBuilderFactory sbf;
-
+    private final String insertSql;
     private final Resource resource;
     private final DataSource dataSource;
 
-    StepOneConfiguration(StepBuilderFactory sbf, DataSource ds, @Value("${fema.file:file://${HOME}/Desktop/fema.csv}") Resource resource) {
+    StepOneConfiguration(StepBuilderFactory sbf, DataSource ds, @Value("${fema.file:file://${HOME}/workspace/fema-disaster-batch-job/data/fema.csv}") Resource resource, @Value("${insert.sql}") String sqlToUse) {
         this.sbf = sbf;
         this.dataSource = ds;
         this.resource = resource;
+        this.insertSql = sqlToUse;
     }
 
     FieldSetMapper<FemaDistaster> fieldSetMapper() {
@@ -108,6 +107,7 @@ class StepOneConfiguration {
     }
 
 
+
     @Bean
     ItemWriter<FemaDistaster> writer() {
         /*
@@ -127,7 +127,7 @@ class StepOneConfiguration {
         JdbcBatchItemWriterBuilder<FemaDistaster> fds = new JdbcBatchItemWriterBuilder<FemaDistaster>();
         fds.dataSource(this.dataSource);
         fds.beanMapped();
-        fds.sql("insert into fema_disaster ( fema_declaration_string  , hash ) values( :femaDeclarationString , :hash ) on conflict  (hash) do update set  fema_declaration_string = :femaDeclarationString  ") ;
+        fds.sql(insertSql) ;
         return fds.build();
     }
 
@@ -136,7 +136,7 @@ class StepOneConfiguration {
     Step one() {
         return sbf
                 .get("csv-to-db-step")
-                .<FemaDistaster, FemaDistaster>chunk(100)
+                .<FemaDistaster, FemaDistaster>chunk(1800)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
