@@ -59,7 +59,6 @@ class StepOneConfiguration {
     private final Resource resource;
     private final DataSource dataSource;
 
-
     StepOneConfiguration(StepBuilderFactory sbf, DataSource ds, @Value("${fema.file:file://${HOME}/Desktop/fema.csv}") Resource resource) {
         this.sbf = sbf;
         this.dataSource = ds;
