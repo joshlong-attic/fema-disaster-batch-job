@@ -69,7 +69,6 @@ class StepOneConfiguration {
             @Override
             public FemaDistaster mapFieldSet(FieldSet fieldSet) throws BindException {
                 String femaDeclarationString = fieldSet.readString("femaDeclarationString");
-
                 return new FemaDistaster(femaDeclarationString, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             }
         };
@@ -106,8 +105,6 @@ class StepOneConfiguration {
         };
     }
 
-
-
     @Bean
     ItemWriter<FemaDistaster> writer() {
         /*
@@ -130,7 +127,6 @@ class StepOneConfiguration {
         fds.sql(insertSql) ;
         return fds.build();
     }
-
 
     @Bean
     Step one() {

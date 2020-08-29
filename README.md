@@ -37,13 +37,11 @@ $ watch kubectl get pods
 ```
 
 Wait until all pods are in 'Ready' state, and ensure you can get into 
-the Spring Cloud Dataflow console. 
+the Spring Cloud Dataflow console. 50-09
 
 ## Setup Port-forwarding 
 
-Visit NOTES.txt to get instructions for exposing the  pod to the local environment.
-
-```shell script 
+Visit NOTES.txt to get instructions431
 $ helm get notes bootiful-batch
 ```
 
