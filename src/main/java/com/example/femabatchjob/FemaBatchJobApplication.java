@@ -57,7 +57,7 @@ class StepOneConfiguration {
     private final Resource resource;
     private final DataSource dataSource;
 
-    StepOneConfiguration(StepBuilderFactory sbf, DataSource ds, @Value("${fema.file:file://${HOME}/workspace/fema-disaster-batch-job/data/fema.csv}") Resource resource, @Value("${insert.sql}") String sqlToUse) {
+    StepOneConfiguration(StepBuilderFactory sbf, DataSource ds, @Value("${fema.file.location}") Resource resource, @Value("${insert.sql}") String sqlToUse) {
         this.sbf = sbf;
         this.dataSource = ds;
         this.resource = resource;
