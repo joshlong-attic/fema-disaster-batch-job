@@ -18,6 +18,7 @@ import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
@@ -26,14 +27,13 @@ import org.springframework.validation.BindException;
 
 import javax.sql.DataSource;
 
+@EnableTask
 @EnableBatchProcessing
 @SpringBootApplication
 public class FemaBatchJobApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(FemaBatchJobApplication.class, args);
     }
-
 }
 
 @Configuration
@@ -51,7 +51,6 @@ class FemaBatchJobConfiguration {
 @Log4j2
 @Configuration
 class StepOneConfiguration {
-
     private final StepBuilderFactory sbf;
     private final String insertSql;
     private final Resource resource;

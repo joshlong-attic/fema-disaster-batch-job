@@ -15,7 +15,6 @@ The DDL for this demo's dataset is as follows:
 ```sql
   Create table fema_disaster (  femaDeclarationString varchar(255) not null, disasterNumber varchar(255) not null, state varchar(255) not null, declarationType varchar(255) not null, declarationDate varchar(255) not null, fyDeclared varchar(255) not null, incidentType varchar(255) not null, declarationTitle varchar(255) not null, ihProgramDeclared varchar(255) not null, iaProgramDeclared varchar(255) not null, paProgramDeclared varchar(255) not null, hmProgramDeclared varchar(255) not null, incidentBeginDate varchar(255) not null, incidentEndDate varchar(255) not null, disasterCloseoutDate varchar(255) not null, fipsStateCode varchar(255) not null, fipsCountyCode varchar(255) not null, placeCode varchar(255) not null, designatedArea varchar(255) not null, declarationRequestNumber varchar(255) not null, hash varchar(255) not null unique, lastRefresh varchar(255) not null, id varchar(255) not null );
 ```
-
 Next, add a user called 'orders' do to the work in the app.
 
 ```sql
@@ -23,12 +22,12 @@ grant all privileges on orders.* to orders@'127.0.0.1' identified by 'orders';
 ```
 ## Deploy the environment with Kubernetes
 
-Setup a namespace using 'Kubectl:
+Setup a namespace using 'Kubectl':
 ```shell script
 $ kubectl create namespace bootiful-batch 
 ```
 
-Add chart source for Bitnami, and install Bitnami/Spring-cloud-dataflow:
+Add the chart source for Bitnami, and install Bitnami/Spring-cloud-dataflow:
 
 ```shell script
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -37,11 +36,12 @@ $ watch kubectl get pods
 ```
 
 Wait until all pods are in 'Ready' state, and ensure you can get into 
-the Spring Cloud Dataflow console. 50-09
+the Spring Cloud Dataflow console.
 
 ## Setup Port-forwarding 
 
-Visit NOTES.txt to get instructions431
+Visit NOTES.txt to get instructions:
+```
 $ helm get notes bootiful-batch
 ```
 
@@ -67,6 +67,35 @@ At this time, we can take the output of the last command and set `spring.datasou
 
 ## Build and Install into Dataflow
 
-Discuss this section - add the app to Spring Cloud Dataflow, and kick it off.
+### First Thing's First!
+
+### Docker
+
+You'll need to have a docker container created, and send it to SCDF-K8S.
+
+```shell script
+eval $(minikube -p minikube docker-env)
+```
+You must upload to dockerhub.io repository:
+
+```
+docker tag my_task:version repository/image
+docker push repository/image
+```
+
+Use this as the environment parameters when kicking off a new job:
+
+```
+--spring.profiles.active=mysql
+deployer.batch-job-f.kubernetes.environmentVariables=FEMA_FILE_LOCATION=https://raw.githubusercontent.com/joshlong/fema-disaster-batch-job/master/data/fema.csv
+```
 
 ## End
+
+## Current issues
+
+### Data-mismatching 
+ 
+Rather than forcing the job to use mariadb, we should find a way to 
+separate our job's DB connection from the connection made to facilitate dataflow operations.
+

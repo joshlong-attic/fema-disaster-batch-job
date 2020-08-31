@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fema-batch
+  labels:
+    app: fema-batch
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: fema-batch
+  template:
+    metadata:
+      labels:
+        app: fema-batch
+    spec:
+      containers:
+      - image: mariogray/fema-batch-job:latest
+        imagePullPolicy: Never
+        name: fema-batch-job
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        env:
+          - name: fema_file_location
+            value: "https://raw.githubusercontent.com/joshlong/fema-disaster-batch-job/master/data/fema.csv"
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
